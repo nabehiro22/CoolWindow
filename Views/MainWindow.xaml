@@ -1,0 +1,40 @@
+﻿<!--
+デフォルトより追加された記述
+xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+xmlns:ri="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
+Style="{DynamicResource WindowStyle}"
+-->
+<Window x:Class="CoolWindow.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+		WindowStartupLocation="CenterScreen"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+		xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+		xmlns:ri="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
+		Style="{DynamicResource WindowStyle}"
+        Title="{Binding Title.Value}" Height="350" Width="525" >
+
+	<!-- 追加 -->
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="BasicDesign.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<!-- 追加 -->
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="Closed">
+			<ri:EventToReactiveCommand Command="{Binding ClosedCommand}" />
+		</i:EventTrigger>
+		<i:EventTrigger EventName="SizeChanged">
+			<ri:EventToReactiveCommand Command="{Binding SizeChangedCommand}" />
+		</i:EventTrigger>
+	</i:Interaction.Triggers>
+
+	<Grid>
+        
+    </Grid>
+</Window>

@@ -1,0 +1,151 @@
+﻿<!--
+アイコンは
+ビルドアクション：リソース
+出力ディレクトリにコピー：コピーしない
+-->
+	
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!-- 非クライアント領域にあるボタンの基本スタイル -->
+	<Style x:Key="SystemButton" TargetType="Button">
+		<Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Foreground" Value="LightGray"/>
+		<Setter Property="IsTabStop" Value="False"/>
+		<!-- FontFamilyにMarlettとする事でシステムボタンの絵になる -->
+		<Setter Property="FontFamily" Value="Marlett"/>
+		<Setter Property="FontSize" Value="20"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Width" Value="35"/>
+		<Setter Property="Height" Value="30"/>
+	</Style>
+
+	<!-- 最大化、最小化のボタン用 -->
+	<Style x:Key="SystemMaxMiniButton" TargetType="Button" BasedOn="{StaticResource SystemButton}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border Name="HoverButtonBorder" BorderThickness="0">
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<!-- マウスカーソルがボタン上に来たら色を変える -->
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="HoverButtonBorder" Property="Background">
+								<Setter.Value>
+									<RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+										<RadialGradientBrush.GradientStops>
+											<GradientStop Color="#7F0000FF" Offset="0"/>
+											<GradientStop Color="#00000000" Offset="1"/>
+										</RadialGradientBrush.GradientStops>
+									</RadialGradientBrush>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- 閉じるボタン用 -->
+	<Style x:Key="SystemCloseButton" TargetType="Button" BasedOn="{StaticResource SystemButton}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border Name="HoverButtonBorder" BorderThickness="0">
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<!-- マウスカーソルがボタン上に来たら色を変える -->
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="HoverButtonBorder" Property="Background">
+								<Setter.Value>
+									<RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+										<RadialGradientBrush.GradientStops>
+											<GradientStop Color="#7FFF0000" Offset="0"/>
+											<GradientStop Color="#00000000" Offset="1"/>
+										</RadialGradientBrush.GradientStops>
+									</RadialGradientBrush>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="WindowStyle" TargetType="Window">
+		<Setter Property="WindowChrome.WindowChrome">
+			<Setter.Value>
+				<WindowChrome CornerRadius="0" GlassFrameThickness="0" ResizeBorderThickness="8"/>
+			</Setter.Value>
+		</Setter>
+		<!-- クライアント領域の基本文字色 -->
+		<Setter Property="Foreground" Value="LightGray"/>
+		<!-- クライアント領域の基本フォントサイズ -->
+		<Setter Property="FontSize" Value="15"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Window">
+					<!-- 外枠の線色 -->
+					<Border x:Name="border" BorderBrush="#202020" BorderThickness="1">
+						<!-- このGridが全体の領域 -->
+						<Grid>
+							<Grid.RowDefinitions>
+								<!-- 領域を非クライアント領域とクライアント領域に分ける -->
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+							<!-- 非クライアント領域 -->
+							<Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+								<!-- 非クライアント領域の色 これはグラデーション -->
+								<Rectangle>
+									<Rectangle.Fill>
+										<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+											<GradientStop Color="#808080"/>
+											<GradientStop Color="#202020" Offset="1"/>
+										</LinearGradientBrush>
+									</Rectangle.Fill>
+								</Rectangle>
+								<!-- 非クライアント領域左側のアイコンとタイトル -->
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+									<Image Source="/Resource/Dialog.ico" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Center" Width="20" Height="20" Margin="5,0,0,0"/>
+									<TextBlock Text="{Binding Title.Value}" FontSize="20" Foreground="LightGray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+								</StackPanel>
+								<!-- 非クライアント領域右側の最小化、最大化 閉じるボタン -->
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+									<Button Content="0" ToolTip="最小化" Command="{Binding WindowMinimum}" Style="{StaticResource SystemMaxMiniButton}"/>
+									<!-- 「最大化」「元に戻す」ボタンのContentとツールチップはReactivePropertyで -->
+									<Button Content="{Binding ButtonStyle.Value}" ToolTip="{Binding ToolTip.Value}" Command="{Binding WindowSize}" Style="{StaticResource SystemMaxMiniButton}"/>
+									<Button Content="r" ToolTip="閉じる" Command="{Binding WindowClose}" Style="{StaticResource SystemCloseButton}"/>
+								</StackPanel>
+							</Grid>
+							<!-- ここがクライアント領域 -->
+							<Grid Grid.Row="1">
+								<!-- クライアント領域の基本色 -->
+								<Rectangle Fill="#202020"/>
+								<!-- これがないとMainWindow.xamlに記述したコントロールが表示されない -->
+								<ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+							</Grid>
+						</Grid>
+					</Border>
+					<!-- 最大化した時ウィンドウ枠が画面外にはみ出ないようにする -->
+					<ControlTemplate.Triggers>
+						<Trigger Property="WindowState" Value="Maximized">
+							<Setter TargetName="border" Property="BorderThickness" Value="8"/>
+						</Trigger>
+						<Trigger Property="WindowState" Value="Normal">
+							<Setter TargetName="border" Property="BorderThickness" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>
